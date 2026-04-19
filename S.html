@@ -209,3 +209,97 @@ function toggleDarkMode() {
 </body>
 </html>
 
+
+ <p id="laikas"></p>
+
+<script>
+setInterval(function() {
+    let dabar = new Date();
+    document.getElementById("laikas").innerText = dabar.toLocaleTimeString();
+}, 1000);
+</script>
+
+
+
+<style>
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+
+  border: 3mm solid;
+
+  /* Vaivorykštė */
+  border-image: linear-gradient(
+    45deg,
+    red,
+    orange,
+    yellow,
+    lime,
+    cyan,
+    blue,
+    violet,
+    red
+  ) 1;
+
+  filter: blur(2px);
+
+  animation: rainbowMove 3s linear infinite;
+}
+
+/* Juda spalvos */
+@keyframes rainbowMove {
+  0% {
+    filter: hue-rotate(0deg) blur(2px);
+  }
+  100% {
+    filter: hue-rotate(360deg) blur(2px);
+  }
+}
+</style>
+
+
+
+<canvas id="c" width="800" height="200" tabindex="0"></canvas>
+<script>
+let x=50,y=150,vy=0,j=0,o={x:800},go=0;
+
+c.focus();
+
+c.onkeydown=e=>{
+  if(e.code=="Space"){
+    if(go){
+      y=150;vy=0;o.x=800;go=0;
+      loop(); // 🔥 svarbiausia eilutė
+    } else if(!j){
+      vy=-10;j=1;
+    }
+  }
+};
+
+function loop(){
+  let ctx=c.getContext("2d");
+  ctx.clearRect(0,0,800,200);
+
+  y+=vy; vy+=0.6;
+  if(y>150){y=150;j=0}
+  ctx.fillRect(x,y,30,30);
+
+  o.x-=5;
+  if(o.x<-20) o.x=800;
+  ctx.fillRect(o.x,150,20,30);
+
+  if(x<o.x+20&&x+30>o.x&&y<180&&y+30>150) go=1;
+
+  if(go){
+    ctx.fillText("Game Over",350,90);
+    ctx.fillText("SPACE = restart",320,120);
+    return;
+  }
+
+  requestAnimationFrame(loop);
+}
+
+loop();
+</script>
